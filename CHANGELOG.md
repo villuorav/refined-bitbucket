@@ -12,9 +12,9 @@
 
 ### Bug fixes:
 
-* Update manifest permissions to allow Fetch requests from Firefox addon,
-  closes [issue #197](https://github.com/refined-bitbucket/refined-bitbucket/issues/197),
-  [pull request #198](https://github.com/refined-bitbucket/refined-bitbucket/pull/198).
+*   Update manifest permissions to allow Fetch requests from Firefox addon,
+    closes [issue #197](https://github.com/refined-bitbucket/refined-bitbucket/issues/197),
+    [pull request #198](https://github.com/refined-bitbucket/refined-bitbucket/pull/198).
 
 ### Development
 

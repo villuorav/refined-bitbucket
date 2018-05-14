@@ -12,17 +12,23 @@ const onChange = ({ target, target: { checked: showComments } }) => {
 };
 
 export default function insertShowComments(section) {
-    if (section.getElementsByClassName('__rbb-show-comments').length) {
+    // Diff failed because pull request is too big
+    if (section.querySelector('div.too-big-message')) {
         return;
     }
 
-    // if (!section.getElementsByClassName('comment-thread-container').length) {
-    //     return;
-    // }
+    section.observeSelector(
+        'li.comment',
+        () => onAddComment(section),
+        () => onDeleteComment(section)
+    );
+}
 
-    // TODO: take into account when diff has comments on previous versino of the file
-    // TODO: take into account when diff didn't load
-    // TODO: take into account comments added dynamically
+function onAddComment(section) {
+    // Show comments checkbox already exists
+    if (section.getElementsByClassName('__rbb-show-comments').length) {
+        return;
+    }
 
     const showCommentsCheckbox = (
         <span className="__rbb-show-comments">
@@ -32,12 +38,26 @@ export default function insertShowComments(section) {
             </label>
         </span>
     );
-    // Some style properties can't be applied with JSX,
-    // don't know why.
+
+    // Some style properties can't be applied with in-line styles JSX, don't know why.
     showCommentsCheckbox.firstChild.style.fontSize = '12px';
+    const hasCommentsOnPreviousVersions = Boolean(
+        section.getElementsByClassName('eclipsedcount').length
+    );
+    if (!hasCommentsOnPreviousVersions) {
+        showCommentsCheckbox.firstChild.style.marginRight = '10px';
+    }
 
     const diffActions = section.querySelector('.diff-actions.secondary');
     diffActions.style.minWidth = '480px';
     diffActions.style.textAlign = 'right';
     diffActions.insertBefore(showCommentsCheckbox, diffActions.firstChild);
+}
+
+function onDeleteComment(section) {
+    // Only remove if there are no comments left in the diff
+    if (!section.querySelector('li.comment')) {
+        const node = section.querySelector('.__rbb-show-comments');
+        node.remove();
+    }
 }
